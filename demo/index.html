@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="dist/css/style.css" />
+</head>
+<body>
+
+	<s-rating editable for="rating-01">
+    <s-icon driver="fontawesome" icon="fas fa-star"></s-icon>
+    <s-icon driver="fontawesome" icon="fas fa-star"></s-icon>
+    <s-icon driver="fontawesome" icon="fas fa-star"></s-icon>
+    <s-icon driver="fontawesome" icon="fas fa-star"></s-icon>
+    <s-icon driver="fontawesome" icon="fas fa-star"></s-icon>
+  </s-rating>
+  <input type="text" name="rating-01" id="rating-01" />
+
+  <br>
+
+  <s-rating class="smileys" editable>
+    <s-icon driver="fontawesome" icon="far fa-angry"></s-icon>
+    <s-icon driver="fontawesome" icon="far fa-frown"></s-icon>
+    <s-icon driver="fontawesome" icon="far fa-meh"></s-icon>
+    <s-icon driver="fontawesome" icon="far fa-grin"></s-icon>
+    <s-icon driver="fontawesome" icon="far fa-grin-stars"></s-icon>
+  </s-rating>
+
+  <br>
+
+  <s-rating class="emoji" based-on="100" value="40" for="rating-02" editable>
+    <span>🍺</span>
+    <span>🍺</span>
+    <span>🍺</span>
+    <span>🍺</span>
+    <span>🍺</span>
+  </s-rating>
+  <input type="text" name="rating-02" id="rating-02" />
+
+	<script src="dist/js/app.js"></script>
+</body>
+</html>

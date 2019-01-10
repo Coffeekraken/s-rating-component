@@ -1,0 +1,50 @@
+@import 'node_modules/coffeekraken-sugar/index';
+
+@include s-setup(());
+@include s-init();
+@include s-classes();
+
+body {
+	padding: s-space(bigger);
+}
+
+s-rating {
+  color: s-color(primary, -lighten 30%);
+}
+[s-rating-hover] {
+  color: s-color(primary);
+  width: 50%;
+  @include s-transition(fast);
+
+  [mood="xlow"] & {
+    color: #f22b2b;
+  }
+  [mood="low"] & {
+    color: #f2892b;
+  }
+  [mood="medium"] & {
+    color: s-color(primary);
+  }
+  [mood="high"] & {
+    color: #f2cf2b;
+  }
+  [mood="xhigh"] & {
+    color: #f2e22b;
+  }
+}
+
+s-rating.smileys {
+  .s-rating__item {
+    margin-right: 2px;
+  }
+}
+
+s-rating.emoji {
+  .s-rating__item {
+    opacity: .3;
+    margin-right: 2px;
+  }
+  .s-rating__hover .s-rating__item {
+    opacity: 1;
+  }
+}
