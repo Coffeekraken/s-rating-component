@@ -29,6 +29,8 @@
 
 <p class="lead">Create nice and fully customizable rating systems with ease</p>
 
+[![View demo](http://components.coffeekraken.io/assets/img/view-demo.png)](http://components.coffeekraken.io/app/s-rating-component)
+
 ## Table of content
 
 1. **[Demo](http://components.coffeekraken.io/app/s-rating-component)**
@@ -98,6 +100,8 @@ This is where comes the `for` attribute. It's exactly like the `for` attribute o
 ## The `basedOn` property
 
 By default, the component will take the **number of items (stars)** as the base for the value calculation. You can override that by passing a `basedOn` attribute like so:
+
+[![View demo](http://components.coffeekraken.io/assets/img/view-demo.png)](http://components.coffeekraken.io/app/s-rating-component?demo=basedOn)
 
 ```html
 <s-rating based-on="100">
