@@ -141,9 +141,11 @@ Example:
 
 You can customize these moods by passing the `moods` property like so:
 
+```html
 <s-rating moods="['hello','world','universe']">
   <!-- etc... -->
 </s-rating>
+```
 
 <a id="readme-browsers-support"></a>
 ## Browsers support
