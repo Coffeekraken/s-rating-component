@@ -49,7 +49,7 @@ depending on the his value
 
 Type : **{ Array<String> }**
 
-Default : **['xlow','low','medium','high','xhigh']**
+Default : **["xlow", "low", "medium", "high", "xhigh"]**
 
 
 
