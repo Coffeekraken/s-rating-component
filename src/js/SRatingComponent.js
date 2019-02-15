@@ -1,5 +1,5 @@
 import SWebComponent from "coffeekraken-sugar/js/core/SWebComponent"
-import dispatchEvent from 'coffeekraken-sugar/js/dom/dispatchEvent'
+import dispatchEvent from "coffeekraken-sugar/js/dom/dispatchEvent"
 
 export default class Component extends SWebComponent {
   /**
@@ -9,7 +9,6 @@ export default class Component extends SWebComponent {
    */
   static get defaultProps() {
     return {
-
       /**
        * Specify the value of the rating component.
        * @prop
@@ -48,8 +47,7 @@ export default class Component extends SWebComponent {
        * @prop
        * @type    {Array<String>}
        */
-      moods: ['xlow','low','medium','high','xhigh']
-
+      moods: ["xlow", "low", "medium", "high", "xhigh"]
     }
   }
 
@@ -59,7 +57,7 @@ export default class Component extends SWebComponent {
    * @protected
    */
   static get physicalProps() {
-    return ['value','for','editable']
+    return ["value", "for", "editable"]
   }
 
   /**
@@ -110,19 +108,19 @@ export default class Component extends SWebComponent {
 
     // trim the content to avoid having spaces between elements
     const parentHTML = this.innerHTML
-    const newHTML = parentHTML.replace(/>\s+</g,'><')
+    const newHTML = parentHTML.replace(/>\s+</g, "><")
     this.innerHTML = newHTML
 
     // get all the items references for later use
-    this._$items = this.querySelectorAll('*')
+    this._$arItems = Array.from(this.children)
 
     // process the props.basedOn if not set
     if (!this.props.basedOn) {
-      this.setProp('basedOn', this._$items.length)
+      this.setProp("basedOn", this._$arItems.length)
     }
 
     // build the hover div
-    this._$hover = document.createElement('div')
+    this._$hover = document.createElement("div")
     this._$hover.innerHTML = this.innerHTML
     this._$hover.classList.add(`${this.componentNameDash}__hover`)
     this._$hover.setAttribute(`${this.componentNameDash}-hover`, true)
@@ -132,10 +130,12 @@ export default class Component extends SWebComponent {
     this.classList.add(this.componentNameDash)
 
     // add class to each items
-    Array.from(this._$items).concat(Array.from(this._$hover.querySelectorAll('*'))).forEach(($item) => {
-      $item.setAttribute(`${this.componentNameDash}-item`, true)
-      $item.classList.add(`${this.componentNameDash}__item`)
-    })
+    this._$arItems
+      .concat(Array.from(this._$hover.querySelectorAll("*")))
+      .forEach($item => {
+        $item.setAttribute(`${this.componentNameDash}-item`, true)
+        $item.classList.add(`${this.componentNameDash}__item`)
+      })
 
     // some internal variables
     this._mouseoverItemHandlerFn = this._mouseoverItemHandler.bind(this)
@@ -179,8 +179,8 @@ export default class Component extends SWebComponent {
    */
   componentWillReceiveProp(name, newVal, oldVal) {
     super.componentWillReceiveProp(name, newVal, oldVal)
-    switch(name) {
-      case 'editable':
+    switch (name) {
+      case "editable":
         if (newVal) {
           this._listenMouseoverItems()
           this._listenClickItems()
@@ -190,20 +190,20 @@ export default class Component extends SWebComponent {
           this._unlistenClickItems()
           this._unlistenMouseoutComponent()
         }
-      break
-      case 'value':
+        break
+      case "value":
         // set the new value in the UI
         this._setUiValue(newVal)
         // set the for value
         this._setForValue(newVal)
-      break
-      case 'for':
+        break
+      case "for":
         if (!newVal) this._unlistenForChange()
         // query the new for target
         this._queryForTarget()
         // listen for changes
         this._listenForChange()
-      break
+        break
       default:
     }
   }
@@ -213,7 +213,9 @@ export default class Component extends SWebComponent {
    * @return    {HTMLElement}    The for target element
    */
   _queryForTarget() {
-    this._$for = document.querySelector(`input[name="${this.props.for}"],input#${this.props.for}`)
+    this._$for = document.querySelector(
+      `input[name="${this.props.for}"],input#${this.props.for}`
+    )
     return this._$for
   }
 
@@ -221,14 +223,14 @@ export default class Component extends SWebComponent {
    * Listen for mouseout of the component
    */
   _listenMouseoutComponent() {
-    this.addEventListener('mouseout', this._mouseoutComponentHandlerFn)
+    this.addEventListener("mouseout", this._mouseoutComponentHandlerFn)
   }
 
   /**
    * Unlisten for mouseout of the component
    */
   _unlistenMouseoutComponent() {
-    this.removeEventListener('mouseout', this._mouseoutComponentHandlerFn)
+    this.removeEventListener("mouseout", this._mouseoutComponentHandlerFn)
   }
 
   /**
@@ -240,12 +242,12 @@ export default class Component extends SWebComponent {
     this._setUiValue(this.props.value)
   }
 
-   /**
+  /**
    * Listen for change in the for target element
    */
   _listenForChange() {
     if (!this._$for) return
-    this._$for.addEventListener('change', this._forChangeHandlerFn)
+    this._$for.addEventListener("change", this._forChangeHandlerFn)
   }
 
   /**
@@ -253,7 +255,7 @@ export default class Component extends SWebComponent {
    */
   _unlistenForChange() {
     if (!this._$for) return
-    this.removeEventListener('change', this._forChangeHandlerFn)
+    this.removeEventListener("change", this._forChangeHandlerFn)
   }
 
   /**
@@ -263,9 +265,10 @@ export default class Component extends SWebComponent {
   _forChangeHandler(e) {
     // boundaries the value
     let value = parseFloat(e.target.value)
-    value = (value < 0) ? 0 : (value > this.props.basedOn) ? this.props.basedOn : value
+    value =
+      value < 0 ? 0 : value > this.props.basedOn ? this.props.basedOn : value
     // set the new value
-    this.setProp('value', value)
+    this.setProp("value", value)
   }
 
   /**
@@ -273,8 +276,8 @@ export default class Component extends SWebComponent {
    */
   _listenMouseoverItems() {
     // listen for mousehover each items in the component
-    ;[].forEach.call(this._$items, ($item) => {
-      $item.addEventListener('mouseover', this._mouseoverItemHandlerFn)
+    this._$arItems.forEach($item => {
+      $item.addEventListener("mouseover", this._mouseoverItemHandlerFn)
     })
   }
 
@@ -283,8 +286,8 @@ export default class Component extends SWebComponent {
    */
   _unlistenMouseoverItems() {
     // remove listener for mousehover each items in the component
-    ;[].forEach.call(this._$items, ($item) => {
-      $item.removeEventListener('mouseover', this._mouseoverItemHandlerFn)
+    this._$arItems.forEach($item => {
+      $item.removeEventListener("mouseover", this._mouseoverItemHandlerFn)
     })
   }
 
@@ -293,8 +296,8 @@ export default class Component extends SWebComponent {
    */
   _listenClickItems() {
     // listen for click each items in the component
-    ;[].forEach.call(this._$items, ($item) => {
-      $item.addEventListener('click', this._clickItemHandlerFn)
+    this._$arItems.forEach($item => {
+      $item.addEventListener("click", this._clickItemHandlerFn)
     })
   }
 
@@ -303,8 +306,8 @@ export default class Component extends SWebComponent {
    */
   _unlistenClickItems() {
     // remove listener for click each items in the component
-    ;[].forEach.call(this._$items, ($item) => {
-      $item.removeEventListener('click', this._clickItemHandlerFn)
+    this._$arItems.forEach($item => {
+      $item.removeEventListener("click", this._clickItemHandlerFn)
     })
   }
 
@@ -314,13 +317,14 @@ export default class Component extends SWebComponent {
    */
   _clickItemHandler(e) {
     // find the index of the element in html
-    const idxOfItem = Array.from(this._$items).indexOf(e.currentTarget)
+    const idxOfItem = this._$arItems.indexOf(e.currentTarget)
 
     // calculate the new value based on the prop basedOn
-    const newValue = this.props.basedOn / this._$items.length * (idxOfItem+1)
+    const newValue =
+      (this.props.basedOn / this._$arItems.length) * (idxOfItem + 1)
 
     // set the new value
-    this.setProp('value', newValue)
+    this.setProp("value", newValue)
   }
 
   /**
@@ -329,13 +333,13 @@ export default class Component extends SWebComponent {
    */
   _mouseoverItemHandler(e) {
     // find the index of the element in html
-    const idxOfItem = Array.from(this._$items).indexOf(e.currentTarget)
+    const idxOfItem = this._$arItems.indexOf(e.currentTarget)
 
     // calculate the percentage to apply as width to the hover element
-    const widthPercent = 100 / this._$items.length * (idxOfItem+1)
+    const widthPercent = (100 / this._$arItems.length) * (idxOfItem + 1)
 
     // calculate the value
-    const value = this.props.basedOn / 100 * widthPercent
+    const value = (this.props.basedOn / 100) * widthPercent
 
     // set the ui value
     this._setUiValue(value)
@@ -347,9 +351,14 @@ export default class Component extends SWebComponent {
    */
   _setUiMood(value) {
     // calculate the mood idx
-    const moodIdx = Math.round(this.props.moods.length / this.props.basedOn * value)
+    const moodIdx = Math.round(
+      (this.props.moods.length / this.props.basedOn) * value
+    )
     // set the mood
-    this.setAttribute('mood', this.props.moods[(moodIdx-1 >= 0) ? moodIdx-1 : 0])
+    this.setAttribute(
+      "mood",
+      this.props.moods[moodIdx - 1 >= 0 ? moodIdx - 1 : 0]
+    )
   }
 
   /**
@@ -358,9 +367,9 @@ export default class Component extends SWebComponent {
    */
   _setForValue(value) {
     if (!this._$for) return
-    this._$for.setAttribute('value', value)
+    this._$for.setAttribute("value", value)
     this._$for.value = value
-    dispatchEvent(this._$for, 'change', value)
+    dispatchEvent(this._$for, "change", value)
   }
 
   /**
@@ -369,7 +378,7 @@ export default class Component extends SWebComponent {
    */
   _setUiValue(value) {
     // calculate the percentage to apply to the UI depending on the basedOn value
-    const valueToSet = 100 / this.props.basedOn * value
+    const valueToSet = (100 / this.props.basedOn) * value
     // set the value to the UI
     this._$hover.style.width = `${valueToSet}%`
     // set the UI mood
@@ -382,6 +391,6 @@ export default class Component extends SWebComponent {
    */
   setValue(value) {
     // set the prop
-    this.setProp('value', value)
+    this.setProp("value", value)
   }
 }

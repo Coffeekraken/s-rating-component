@@ -70,17 +70,17 @@ function (_SWebComponent) {
 
 
       var parentHTML = this.innerHTML;
-      var newHTML = parentHTML.replace(/>\s+</g, '><');
+      var newHTML = parentHTML.replace(/>\s+</g, "><");
       this.innerHTML = newHTML; // get all the items references for later use
 
-      this._$items = this.querySelectorAll('*'); // process the props.basedOn if not set
+      this._$arItems = Array.from(this.children); // process the props.basedOn if not set
 
       if (!this.props.basedOn) {
-        this.setProp('basedOn', this._$items.length);
+        this.setProp("basedOn", this._$arItems.length);
       } // build the hover div
 
 
-      this._$hover = document.createElement('div');
+      this._$hover = document.createElement("div");
       this._$hover.innerHTML = this.innerHTML;
 
       this._$hover.classList.add("".concat(this.componentNameDash, "__hover"));
@@ -91,10 +91,11 @@ function (_SWebComponent) {
 
       this.classList.add(this.componentNameDash); // add class to each items
 
-      Array.from(this._$items).concat(Array.from(this._$hover.querySelectorAll('*'))).forEach(function ($item) {
+      this._$arItems.concat(Array.from(this._$hover.querySelectorAll("*"))).forEach(function ($item) {
         $item.setAttribute("".concat(_this.componentNameDash, "-item"), true);
         $item.classList.add("".concat(_this.componentNameDash, "__item"));
       }); // some internal variables
+
 
       this._mouseoverItemHandlerFn = this._mouseoverItemHandler.bind(this);
       this._clickItemHandlerFn = this._clickItemHandler.bind(this);
@@ -144,7 +145,7 @@ function (_SWebComponent) {
       _get(_getPrototypeOf(Component.prototype), "componentWillReceiveProp", this).call(this, name, newVal, oldVal);
 
       switch (name) {
-        case 'editable':
+        case "editable":
           if (newVal) {
             this._listenMouseoverItems();
 
@@ -161,7 +162,7 @@ function (_SWebComponent) {
 
           break;
 
-        case 'value':
+        case "value":
           // set the new value in the UI
           this._setUiValue(newVal); // set the for value
 
@@ -170,7 +171,7 @@ function (_SWebComponent) {
 
           break;
 
-        case 'for':
+        case "for":
           if (!newVal) this._unlistenForChange(); // query the new for target
 
           this._queryForTarget(); // listen for changes
@@ -201,7 +202,7 @@ function (_SWebComponent) {
   }, {
     key: "_listenMouseoutComponent",
     value: function _listenMouseoutComponent() {
-      this.addEventListener('mouseout', this._mouseoutComponentHandlerFn);
+      this.addEventListener("mouseout", this._mouseoutComponentHandlerFn);
     }
     /**
      * Unlisten for mouseout of the component
@@ -210,7 +211,7 @@ function (_SWebComponent) {
   }, {
     key: "_unlistenMouseoutComponent",
     value: function _unlistenMouseoutComponent() {
-      this.removeEventListener('mouseout', this._mouseoutComponentHandlerFn);
+      this.removeEventListener("mouseout", this._mouseoutComponentHandlerFn);
     }
     /**
      * When the user has the mouse out of the component
@@ -224,15 +225,15 @@ function (_SWebComponent) {
       this._setUiValue(this.props.value);
     }
     /**
-    * Listen for change in the for target element
-    */
+     * Listen for change in the for target element
+     */
 
   }, {
     key: "_listenForChange",
     value: function _listenForChange() {
       if (!this._$for) return;
 
-      this._$for.addEventListener('change', this._forChangeHandlerFn);
+      this._$for.addEventListener("change", this._forChangeHandlerFn);
     }
     /**
      * Unlisten for change in the for target element
@@ -242,7 +243,7 @@ function (_SWebComponent) {
     key: "_unlistenForChange",
     value: function _unlistenForChange() {
       if (!this._$for) return;
-      this.removeEventListener('change', this._forChangeHandlerFn);
+      this.removeEventListener("change", this._forChangeHandlerFn);
     }
     /**
      * When the user has the mouse out of the component
@@ -256,7 +257,7 @@ function (_SWebComponent) {
       var value = parseFloat(e.target.value);
       value = value < 0 ? 0 : value > this.props.basedOn ? this.props.basedOn : value; // set the new value
 
-      this.setProp('value', value);
+      this.setProp("value", value);
     }
     /**
      * Listen for mouseover on the items to adapt the display accordingly
@@ -268,9 +269,8 @@ function (_SWebComponent) {
       var _this2 = this;
 
       // listen for mousehover each items in the component
-      ;
-      [].forEach.call(this._$items, function ($item) {
-        $item.addEventListener('mouseover', _this2._mouseoverItemHandlerFn);
+      this._$arItems.forEach(function ($item) {
+        $item.addEventListener("mouseover", _this2._mouseoverItemHandlerFn);
       });
     }
     /**
@@ -283,9 +283,8 @@ function (_SWebComponent) {
       var _this3 = this;
 
       // remove listener for mousehover each items in the component
-      ;
-      [].forEach.call(this._$items, function ($item) {
-        $item.removeEventListener('mouseover', _this3._mouseoverItemHandlerFn);
+      this._$arItems.forEach(function ($item) {
+        $item.removeEventListener("mouseover", _this3._mouseoverItemHandlerFn);
       });
     }
     /**
@@ -298,9 +297,8 @@ function (_SWebComponent) {
       var _this4 = this;
 
       // listen for click each items in the component
-      ;
-      [].forEach.call(this._$items, function ($item) {
-        $item.addEventListener('click', _this4._clickItemHandlerFn);
+      this._$arItems.forEach(function ($item) {
+        $item.addEventListener("click", _this4._clickItemHandlerFn);
       });
     }
     /**
@@ -313,9 +311,8 @@ function (_SWebComponent) {
       var _this5 = this;
 
       // remove listener for click each items in the component
-      ;
-      [].forEach.call(this._$items, function ($item) {
-        $item.removeEventListener('click', _this5._clickItemHandlerFn);
+      this._$arItems.forEach(function ($item) {
+        $item.removeEventListener("click", _this5._clickItemHandlerFn);
       });
     }
     /**
@@ -327,11 +324,12 @@ function (_SWebComponent) {
     key: "_clickItemHandler",
     value: function _clickItemHandler(e) {
       // find the index of the element in html
-      var idxOfItem = Array.from(this._$items).indexOf(e.currentTarget); // calculate the new value based on the prop basedOn
+      var idxOfItem = this._$arItems.indexOf(e.currentTarget); // calculate the new value based on the prop basedOn
 
-      var newValue = this.props.basedOn / this._$items.length * (idxOfItem + 1); // set the new value
 
-      this.setProp('value', newValue);
+      var newValue = this.props.basedOn / this._$arItems.length * (idxOfItem + 1); // set the new value
+
+      this.setProp("value", newValue);
     }
     /**
      * When the user mouse over an item in the component
@@ -342,9 +340,10 @@ function (_SWebComponent) {
     key: "_mouseoverItemHandler",
     value: function _mouseoverItemHandler(e) {
       // find the index of the element in html
-      var idxOfItem = Array.from(this._$items).indexOf(e.currentTarget); // calculate the percentage to apply as width to the hover element
+      var idxOfItem = this._$arItems.indexOf(e.currentTarget); // calculate the percentage to apply as width to the hover element
 
-      var widthPercent = 100 / this._$items.length * (idxOfItem + 1); // calculate the value
+
+      var widthPercent = 100 / this._$arItems.length * (idxOfItem + 1); // calculate the value
 
       var value = this.props.basedOn / 100 * widthPercent; // set the ui value
 
@@ -361,7 +360,7 @@ function (_SWebComponent) {
       // calculate the mood idx
       var moodIdx = Math.round(this.props.moods.length / this.props.basedOn * value); // set the mood
 
-      this.setAttribute('mood', this.props.moods[moodIdx - 1 >= 0 ? moodIdx - 1 : 0]);
+      this.setAttribute("mood", this.props.moods[moodIdx - 1 >= 0 ? moodIdx - 1 : 0]);
     }
     /**
      * Set the value of the for target if there's one
@@ -373,10 +372,10 @@ function (_SWebComponent) {
     value: function _setForValue(value) {
       if (!this._$for) return;
 
-      this._$for.setAttribute('value', value);
+      this._$for.setAttribute("value", value);
 
       this._$for.value = value;
-      (0, _dispatchEvent.default)(this._$for, 'change', value);
+      (0, _dispatchEvent.default)(this._$for, "change", value);
     }
     /**
      * Set the UI value
@@ -402,7 +401,7 @@ function (_SWebComponent) {
     key: "setValue",
     value: function setValue(value) {
       // set the prop
-      this.setProp('value', value);
+      this.setProp("value", value);
     }
   }], [{
     key: "defaultCss",
@@ -462,7 +461,7 @@ function (_SWebComponent) {
          * @prop
          * @type    {Array<String>}
          */
-        moods: ['xlow', 'low', 'medium', 'high', 'xhigh']
+        moods: ["xlow", "low", "medium", "high", "xhigh"]
       };
     }
     /**
@@ -474,7 +473,7 @@ function (_SWebComponent) {
   }, {
     key: "physicalProps",
     get: function get() {
-      return ['value', 'for', 'editable'];
+      return ["value", "for", "editable"];
     }
   }]);
 
